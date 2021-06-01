@@ -13,6 +13,9 @@ import {
   Button,
   FormGroup,
   DropdownMenu,
+  Modal,
+  ModalBody,
+  ModalHeader,
 } from "reactstrap";
 import "./RegimenForm.scss";
 import { notification } from "antd";
@@ -27,6 +30,8 @@ const RegimenForm = ({ filterProducts, cuit, products }) => {
   const [forms, setForms] = useState([
     { CantidadVendida: "Cantidad Vendida", CantidadProducida: "Cantidad Producida" },
   ]);
+  const [modal, setModal] = useState(false);
+  const toggle = () => setModal(!modal);
 
   const [mes, setMes] = useState("");
   const [anio, setAnio] = useState("");
@@ -57,6 +62,7 @@ const RegimenForm = ({ filterProducts, cuit, products }) => {
 
     return regimen;
   };
+
   const getFormData = (data) => {
     let formateP = products.filter((p) => p["products.id"] == data.product);
     formateP = formateP[0];
@@ -70,21 +76,11 @@ const RegimenForm = ({ filterProducts, cuit, products }) => {
         candtidad_vendida: data.cantVend,
         precio_venta: formateP["products.precio_unidad"],
       };
-      setProductValues(productValues.filter((p) => p.ean !== formateP.ean));
+      // setProductValues(productValues.filter((p) => p.ean !== formateP.ean));
       setProductValues((prevState) => [...prevState, formateP]);
     }
-
     setFlag(false);
   };
-  useEffect(() => {
-    if (productValues.ventas && productValues.ventas.length != 0) {
-    }
-    console.log(productValues, 1);
-    filterProducts(productValues);
-    console.log(productValues, 2);
-    sendRegimen(formateRegimen());
-    console.log(productValues, 3);
-  }, [productValues]);
 
   const addForm = () => {
     const newForm = [
@@ -154,14 +150,28 @@ const RegimenForm = ({ filterProducts, cuit, products }) => {
               </Button>
             </Col>
             <Col xs={6} sm={6} md={6} lg={6} xl={6}>
-              <Button color="success" type="submit">
-                {" "}
+              <Button onClick={toggle} color="success" type="submit">
                 Enviar Regimen
               </Button>
             </Col>
           </Row>
         </Container>
       </Form>
+      <div>
+        <Modal isOpen={modal} toggle={toggle}>
+          <ModalHeader toggle={toggle}>Enviar Regimen?</ModalHeader>
+          <ModalBody>
+            <Button
+              onClick={() => {
+                toggle();
+                sendRegimen(formateRegimen());
+              }}
+            >
+              Aceptar
+            </Button>
+          </ModalBody>
+        </Modal>
+      </div>
     </React.Fragment>
   );
 };
