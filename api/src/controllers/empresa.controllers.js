@@ -10,7 +10,7 @@ const getProductsByCuit = async (req = Request, res = Response) => {
       res.status(400).send("cuit vacio");
     }
     const products = await repository.getProductsByCuit(req.params.cuit);
-    console.log(products, 1);
+
     res.status(200).json(products);
   } catch (err) {
     res.status(500).send(err);

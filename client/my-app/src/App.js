@@ -27,6 +27,7 @@ function App() {
     }
     setNotification({ open: true, message: estado.notification["message"] });
   };
+
   const handleCuit = async () => {
     setError("");
 
@@ -36,7 +37,6 @@ function App() {
       }
       if (!error) {
         const res = await axios.get(`http://localhost:3045/empresas/${inputCuit}`);
-        console.log(res.data);
         if (res.data.length > 0) {
           setProducts(res.data);
           setOpen(true);
@@ -56,11 +56,11 @@ function App() {
   return (
     <div className="App">
       <Header></Header>
-      <h1>20410810205</h1>
+
       <Container>
         <div>
           <Row className="cuit-input">
-            <Col className="mt-1" xs={3} sm={3} md={3} lg={3} xl={3}>
+            <Col className="mt-1" xs={6} sm={6} md={3} lg={3} xl={3}>
               <Input
                 className="mb-2"
                 name="cuit"
@@ -72,13 +72,13 @@ function App() {
               />
               {error ? <div style={{ color: "red" }}>{error}</div> : null}
             </Col>
-            <Col xs={3} sm={3} md={3} lg={3} xl={3}>
+            <Col className="mb-2" xs={12} sm={12} md={3} lg={3} xl={3}>
               <Button onClick={handleCuit}>Cargar Regimen</Button>
             </Col>
-            <Col xs={3} sm={3} md={3} lg={3} xl={3}>
+            <Col className="mb-2" xs={12} sm={12} md={3} lg={3} xl={3}>
               <Button onClick={() => setCreateProduct(true)}>Crear Producto</Button>
             </Col>
-            <Col xs={3} sm={3} md={3} lg={3} xl={3}>
+            <Col className="mb-2" xs={12} sm={12} md={3} lg={3} xl={3}>
               <Button onClick={handleNotification}>Consultar Estado</Button>
             </Col>
           </Row>
@@ -91,9 +91,7 @@ function App() {
             filterProducts={filterProducts}
             cuit={inputCuit}
           ></RegimenForm>
-        ) : (
-          ""
-        )}
+        ) : null}
       </Container>
     </div>
   );
