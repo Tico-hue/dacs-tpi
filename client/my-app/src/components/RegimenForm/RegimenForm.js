@@ -43,8 +43,14 @@ const RegimenForm = ({ filterProducts, cuit, products }) => {
   };
 
   const sendRegimen = async (regimen) => {
+    console.log(regimen);
     if (anio && mes && productValues.length !== 0) {
-      const res = await axios.post("http://localhost:3045/empresas/", regimen);
+      console.log(regimen);
+      const res = await axios.post(
+        "https://ministeriodesarrolloproductivo.herokuapp.com/api/reports",
+        { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } },
+        regimen,
+      );
       console.log(res);
     }
   };
@@ -57,8 +63,18 @@ const RegimenForm = ({ filterProducts, cuit, products }) => {
         return;
       }
     }
-
-    const regimen = { cuit: cuit, year: anio, month: mes, ventas: productValues };
+    const cuitInt = parseInt(cuit);
+    const regimen = {
+      infoEmpresa: {
+        cuit: cuitInt,
+        razon_social: cuit,
+      },
+      listaRegistro: productValues,
+      periodo: {
+        year: anio,
+        month: mes,
+      },
+    };
 
     return regimen;
   };
@@ -69,12 +85,12 @@ const RegimenForm = ({ filterProducts, cuit, products }) => {
 
     if (formateP) {
       formateP = {
-        ean: formateP["products.codigo_ean"],
+        codigo_ean: formateP["products.codigo_ean"],
         denominacion: formateP["products.denominacion"],
-        unidad_medida: formateP["products.unidad_medida"],
-        candtidad_producida: data.cantProd,
-        candtidad_vendida: data.cantVend,
-        precio_venta: formateP["products.precio_unidad"],
+        unidad_medida: "L",
+        cantidad_prod: data.cantProd,
+        cantidad_vend: data.cantVend,
+        precio_unidad: 421,
       };
       // setProductValues(productValues.filter((p) => p.ean !== formateP.ean));
       setProductValues((prevState) => [...prevState, formateP]);

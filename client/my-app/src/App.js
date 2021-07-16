@@ -6,6 +6,8 @@ import "antd/dist/antd.css";
 import CreateProductForm from "./components/CreateProductForm/CreateProductForm";
 import { Container, Row, Col, Button, Input, ModalHeader } from "reactstrap";
 import { notification, message, Descriptions } from "antd";
+import { Link, useHistory, useLocation } from "react-router-dom";
+
 import axios from "axios";
 
 function App() {
@@ -16,34 +18,48 @@ function App() {
   const [createProduct, setCreateProduct] = useState(false);
   const [notification, setNotification] = useState({ open: false, message: "" });
 
+  const history = useHistory();
+
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+
   const handleNotification = async () => {
     setNotification({ open: false, message: "" });
-    const estado = await axios.get(`http://localhost:3050/notifications/${inputCuit}`);
-    const res = estado.data;
-    if (res.notification.status) {
-      setNotification({ open: true, message: res.notification.message });
+    console.log(localStorage.getItem("token"));
+    const notif = await axios.get(`https://api-secretaria-g6.herokuapp.com/status/`, {
+      headers: { Authorization: localStorage.getItem("token") },
+    });
+    const notif1 = notif.data;
+    if (notif1.data.notif1ication) {
+      setNotification({ open: true, message: notif1.data.notif1ication.message });
     } else {
-      setNotification({ open: true, message: [res.notification, res.alerts] });
+      setNotification({ open: true, message: notif1.data.alerts[0].title });
     }
-    setNotification({ open: true, message: estado.notification["message"] });
+    setNotification({ open: true, message: notif1.data.notification["message"] });
   };
 
+  useEffect(() => {
+    let cuit = "";
+    if (query.get("cuit")) {
+      cuit = query.get("cuit");
+      setInputCuit(cuit);
+    }
+  }, [history]);
   const handleCuit = async () => {
     setError("");
+    let cuit = "";
+    if (query.get("cuit")) {
+      cuit = query.get("cuit");
+      console.log(cuit);
+    }
 
-    if (inputCuit) {
-      if (inputCuit.length !== 11) {
-        setError("el cuit debe ser numerico y de 11 caracteres");
-      }
-      if (!error) {
-        const res = await axios.get(`http://localhost:3045/empresas/${inputCuit}`);
-        if (res.data.length > 0) {
-          setProducts(res.data);
-          setOpen(true);
-        } else {
-          setError("El cuit ingresado no tiene productos");
-        }
-      }
+    const res = await axios.get(`http://localhost:3045/empresas/${cuit}`);
+    console.log(res.data);
+    if (res.data) {
+      setProducts(res.data);
+      setOpen(true);
+    } else {
+      setError("El cuit ingresado no tiene productos");
     }
   };
 
@@ -55,23 +71,9 @@ function App() {
   };
   return (
     <div className="App">
-      <Header></Header>
-
       <Container>
         <div>
           <Row className="cuit-input">
-            <Col className="mt-1" xs={6} sm={6} md={3} lg={3} xl={3}>
-              <Input
-                className="mb-2"
-                name="cuit"
-                type="text"
-                placeholder="Cuit"
-                onChange={(e) => {
-                  setInputCuit(e.target.value);
-                }}
-              />
-              {error ? <div style={{ color: "red" }}>{error}</div> : null}
-            </Col>
             <Col className="mb-2" xs={12} sm={12} md={3} lg={3} xl={3}>
               <Button onClick={handleCuit}>Cargar Regimen</Button>
             </Col>

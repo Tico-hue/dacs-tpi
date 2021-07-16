@@ -1,5 +1,15 @@
 .header {
-  height: 50px;
   background-color: #313131;
   margin-bottom: 2rem;
+}
+
+.header-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header-buttons {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }

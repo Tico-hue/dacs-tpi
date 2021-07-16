@@ -11,10 +11,8 @@ const getAllProducts = async (req = Request, res = Response) => {
 
 const createProduct = async (req = Request, res = Response) => {
   try {
-    console.log(req.body, "body");
     const empresa = await repository.getEmpresaByCuit(req.body.cuit);
-    // const producto = await repository.createProduct(req.body)
-    console.log(empresa[0].id, "empresa");
+
     const body = {
       emp_id: empresa[0].id,
       ean: req.body.ean,

@@ -5,6 +5,17 @@ const db = require("../loaders/db/db");
 class empresaRepository {
   constructor() {}
 
+  async createEmpresa(body) {
+    try {
+      const response = await db.empresas.create({
+        CUIT: body.cuit,
+        razon_social: body.razon_social,
+      });
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
   async getProductsByCuit(cuit) {
     try {
       const response = await db.empresas.findAll({

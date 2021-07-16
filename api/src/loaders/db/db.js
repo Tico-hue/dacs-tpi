@@ -5,8 +5,8 @@ const regimenes = require("../../models/Venta");
 const config = require("../../config");
 const logger = require("../logger");
 
-const sequelize = new Sequelize("dacs_tpi", "root", "rootroot", {
-  host: config.host,
+const sequelize = new Sequelize("dacs_tpi", "root", "39776048", {
+  host: "34.95.181.194",
   dialect: "mysql",
   dialectOptions: { decimalNumbers: true },
 });

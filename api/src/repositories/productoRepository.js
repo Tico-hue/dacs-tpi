@@ -28,6 +28,7 @@ class ProductRepository {
           CUIT: cuit,
         },
       });
+      console.log(empresa);
       return empresa;
     } catch (err) {
       throw err;

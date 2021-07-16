@@ -6,7 +6,7 @@ module.exports = (sequelize, type) => {
       autoIncrement: true,
     },
     denominacion: type.STRING,
-    codigo_ean: { type: type.INTEGER, unique: true },
+    codigo_ean: { type: type.BIGINT, unique: true },
     precio_unidad: type.DECIMAL(10, 2),
     //TODO entity
     unidad_medida: type.STRING,
